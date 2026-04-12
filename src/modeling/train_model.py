@@ -52,7 +52,7 @@ def main():
 
     # 2. Load Tokenizer
     print("Loading Llama Tokenizer...")
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, local_files_only=False)
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
     
     # Llama models don't have a default padding token, so we assign one
     if tokenizer.pad_token is None:
