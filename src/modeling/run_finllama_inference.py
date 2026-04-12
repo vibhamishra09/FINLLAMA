@@ -7,7 +7,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from peft import PeftModel
 
 # --- Configuration ---
-BASE_MODEL_PATH = str(Path("./Llama-3.2-1B").resolve())
+BASE_MODEL_PATH = str(Path("meta-llama/Llama-2-7b-hf").resolve())
 ADAPTER_PATH = str(Path("./model_output/finllama/final_model").resolve())
 TEST_DATA_PATH = Path("/content/drive/MyDrive/llm_training_data")
 OUTPUT_CSV_PATH = Path("./FinLLaMA_predictions.csv")
@@ -23,7 +23,7 @@ def main():
     
     # 2. Load Tokenizer
     print("Loading Tokenizer...")
-    tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL_PATH, local_files_only=True)
+    tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL_PATH, local_files_only=False)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
@@ -37,7 +37,7 @@ def main():
         id2label=id2label,
         device_map="auto",
         torch_dtype=torch.float16,
-        local_files_only=True
+        local_files_only=False
     )
     base_model.config.pad_token_id = tokenizer.pad_token_id
 

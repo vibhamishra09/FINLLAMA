@@ -16,7 +16,7 @@ from transformers import (
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 
 # --- Configuration & Paths ---
-MODEL_NAME = "./Llama-3.2-1B"
+MODEL_NAME = "meta-llama/Llama-2-7b-hf"
 DATA_DIR = Path("/content/drive/MyDrive/llm_training_data")
 OUTPUT_DIR = Path("./model_output/finllama")
 
@@ -52,7 +52,7 @@ def main():
 
     # 2. Load Tokenizer
     print("Loading Llama Tokenizer...")
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, local_files_only=True)
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, local_files_only=False)
     
     # Llama models don't have a default padding token, so we assign one
     if tokenizer.pad_token is None:
@@ -91,7 +91,7 @@ def main():
         label2id=label2id,
         quantization_config=bnb_config,
         device_map="auto",  # Automatically places the model on your GPU
-        local_files_only=True,
+        local_files_only=False,
     )
     model.config.pad_token_id = tokenizer.pad_token_id
 

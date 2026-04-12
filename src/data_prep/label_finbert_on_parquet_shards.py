@@ -172,7 +172,7 @@ def label_shards_with_finbert(
         tokenizer = AutoTokenizer.from_pretrained(
             finbert_model_name,
             use_fast=False,
-            local_files_only=True,
+            local_files_only=False,
         )
     except Exception as e:
         print(
@@ -183,12 +183,12 @@ def label_shards_with_finbert(
 
         tokenizer = BertTokenizer.from_pretrained(
             finbert_model_name,
-            local_files_only=True,
+            local_files_only=False,
         )
     try:
         model = AutoModelForSequenceClassification.from_pretrained(
             finbert_model_name,
-            local_files_only=True,
+            local_files_only=False,
             use_safetensors=False,
         )
     except Exception as e:
@@ -200,7 +200,7 @@ def label_shards_with_finbert(
 
         model = BertForSequenceClassification.from_pretrained(
             finbert_model_name,
-            local_files_only=True,
+            local_files_only=False,
             use_safetensors=False,
         )
     model.to(device)
