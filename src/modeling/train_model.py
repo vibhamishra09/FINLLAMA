@@ -58,14 +58,17 @@ def main():
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    def tokenize_function(examples):
+    def tokenize_function(example):
         tokenized = tokenizer(
-            examples["text"],
-            padding=False,
+            example["text"],
+            padding="max_length",
             truncation=True,
-            max_length=MAX_LENGTH,
-        )
-        
+            max_length=512,
+    )
+    
+    # Temporary fix (since no sentiment column)
+        tokenized["labels"] = 0  
+    
         return tokenized
 
     tokenized_datasets = dataset.map(tokenize_function, batched=True, remove_columns=["text", "date"])
