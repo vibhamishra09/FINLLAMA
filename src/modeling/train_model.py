@@ -66,9 +66,9 @@ def main():
             max_length=512,
         )
     
-    # MUST be inside function
-    
-    tokenized["labels"] = [0] * batch_size  
+    # ALWAYS match batch size of input_ids
+    batch_size = len(tokenized["input_ids"])
+    tokenized["labels"] = [0] * batch_size
     
     return tokenized
 
