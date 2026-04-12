@@ -66,7 +66,7 @@ def main():
             max_length=512,
         )
     
-    # FIX: labels must be list same length as batch
+    # MUST be inside function
     batch_size = len(example["text"])
     tokenized["labels"] = [0] * batch_size  
     
