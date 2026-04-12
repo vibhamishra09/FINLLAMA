@@ -64,12 +64,13 @@ def main():
             padding="max_length",
             truncation=True,
             max_length=512,
-    )
+        )
     
-    # Temporary fix (since no sentiment column)
-        tokenized["labels"] = 0  
+    # FIX: labels must be list same length as batch
+    batch_size = len(example["text"])
+    tokenized["labels"] = [0] * batch_size  
     
-        return tokenized
+    return tokenized
 
     tokenized_datasets = dataset.map(tokenize_function, batched=True, remove_columns=["text", "date"])
 
