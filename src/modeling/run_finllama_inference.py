@@ -9,7 +9,7 @@ from peft import PeftModel
 # --- Configuration ---
 BASE_MODEL_PATH = str(Path("./Llama-3.2-1B").resolve())
 ADAPTER_PATH = str(Path("./model_output/finllama/final_model").resolve())
-TEST_DATA_PATH = Path("./llm_training_data/test_llm.parquet")
+TEST_DATA_PATH = Path("/content/drive/MyDrive/llm_training_data")
 OUTPUT_CSV_PATH = Path("./FinLLaMA_predictions.csv")
 
 def main():
