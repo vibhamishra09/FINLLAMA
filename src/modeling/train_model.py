@@ -67,7 +67,7 @@ def main():
         )
     
     # MUST be inside function
-    batch_size = len(example["text"])
+    
     tokenized["labels"] = [0] * batch_size  
     
     return tokenized
