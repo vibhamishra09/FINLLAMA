@@ -65,10 +65,10 @@ def main():
             truncation=True,
             max_length=MAX_LENGTH,
         )
-        tokenized["labels"] = examples["sentiment"]
+        
         return tokenized
 
-    tokenized_datasets = dataset.map(tokenize_function, batched=True, remove_columns=["text", "sentiment", "confidence", "date"])
+    tokenized_datasets = dataset.map(tokenize_function, batched=True, remove_columns=["text", "date"])
 
     # 3. Configure 4-Bit Quantization (The Black Magic)
     print("Configuring 4-bit Quantization...")

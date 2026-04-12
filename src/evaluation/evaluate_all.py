@@ -28,7 +28,11 @@ def main():
             continue
             
         df = pd.read_csv(file_path)
-        y_true = df["sentiment"]
+        if "sentiment" in df.columns:
+            y_true = df["sentiment"]
+        else:
+            y_true = df.iloc[:, 0] # fallback
+
         y_pred = df["predicted_sentiment"]
         
         acc = accuracy_score(y_true, y_pred)

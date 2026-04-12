@@ -23,7 +23,12 @@ def main():
 
     print("Loading FinLLaMA predictions...")
     df = pd.read_csv(FINLLAMA_PREDS_PATH)
-    y_true = df["sentiment"]
+    if "sentiment" in df.columns:
+        y_true = df["sentiment"]
+        y_pred = df["predicted_sentiment"]
+
+        acc = accuracy_score(y_true, y_pred)
+        f1 = f1_score(y_true, y_pred, average="weighted")
     y_pred = df["predicted_sentiment"]
 
     # Binarize the labels for One-vs-Rest (OvR) evaluation
