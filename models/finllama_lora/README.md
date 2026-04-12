@@ -1,8 +1,8 @@
 ---
-base_model: meta-llama/Llama-2-7b-hf
+base_model: ../../models/Llama-3.2-1B
 library_name: peft
 tags:
-- base_model:adapter:meta-llama/Llama-2-7b-hf
+- base_model:adapter:../../models/Llama-3.2-1B
 - lora
 - transformers
 ---

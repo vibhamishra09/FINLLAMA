@@ -5,7 +5,7 @@ from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 # --- Configuration ---
-BASE_MODEL_PATH = str(Path("meta-llama/Llama-2-7b-hf").resolve())
+BASE_MODEL_PATH = str(Path("../../models/Llama-3.2-1B").resolve())
 TEST_DATA_PATH = Path("/content/drive/MyDrive/llm_training_data")
 OUTPUT_CSV_PATH = Path("./Base_Llama_predictions.csv")
 
