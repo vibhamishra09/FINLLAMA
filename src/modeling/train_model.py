@@ -67,10 +67,10 @@ def main():
         )
     
     # ALWAYS match batch size of input_ids
-    batch_size = len(tokenized["input_ids"])
-    tokenized["labels"] = [0] * batch_size
+        batch_size = len(tokenized["input_ids"])
+        tokenized["labels"] = [0] * batch_size
     
-    return tokenized
+        return tokenized
 
     tokenized_datasets = dataset.map(tokenize_function, batched=True, remove_columns=["text", "date"])
 
