@@ -16,7 +16,7 @@ from transformers import (
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 
 # --- Configuration & Paths ---
-MODEL_NAME = "../../models/Llama-3.2-1B"
+MODEL_NAME = "meta-llama/Llama-3.2-1B"
 DATA_DIR = Path("/content/drive/MyDrive/llm_training_data")
 OUTPUT_DIR = Path("./model_output/finllama")
 
