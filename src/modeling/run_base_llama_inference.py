@@ -7,7 +7,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 # --- Configuration ---
 BASE_MODEL_PATH = str(Path("meta-llama/Llama-3.2-1B").resolve())
 TEST_DATA_PATH = Path("/content/drive/MyDrive/llm_training_data")
-OUTPUT_CSV_PATH = Path("./Base_Llama_predictions.csv")
+OUTPUT_CSV_PATH = Path("/content/drive/MyDrive/Base_Llama_predictions.csv")
 
 def main():
     print("="*60)
