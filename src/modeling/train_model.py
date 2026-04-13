@@ -18,7 +18,7 @@ from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 # --- Configuration & Paths ---
 MODEL_NAME = "meta-llama/Llama-3.2-1B"
 DATA_DIR = Path("/content/drive/MyDrive/llm_training_data")
-OUTPUT_DIR = Path("./model_output/finllama")
+OUTPUT_DIR = Path("/content/drive/MyDrive/finllama_model")
 
 # Extreme VRAM Optimizations for GTX 1650
 MAX_LENGTH = 128      # Hard cap to save memory
@@ -63,7 +63,7 @@ def main():
             example["text"],
             padding="max_length",
             truncation=True,
-            max_length=512,
+            max_length=MAX_LENGTH,
         )
     
     # ALWAYS match batch size of input_ids
