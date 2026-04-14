@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, classifi
 # ==============================
 # 1. LOAD LABELED SHARDS
 # ==============================
-files = glob.glob("/content/drive/MyDrive/labeled_shards/*.parquet")
+files = glob.glob("/content/drive/MyDrive/labeled_shards")
 
 # Load only subset to avoid memory crash
 df = pd.concat([pd.read_parquet(f) for f in files[:20]])
