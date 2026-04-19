@@ -6,10 +6,8 @@ from sklearn.preprocessing import LabelBinarizer
 from pathlib import Path
 
 # --- Configuration ---
-PRED_PATH = Path("/content/drive/MyDrive/FinLLaMA_predictions.csv")
-TRUE_PATH = Path("/content/drive/MyDrive/labeled_shards")  # use labeled shards
-OUTPUT_DIR = Path("/content/drive/MyDrive/figures")
-
+FINLLAMA_PREDS_PATH = Path("../../results/predictions/FinLLaMA_predictions.csv")
+OUTPUT_DIR = Path("../../results/figures")
 LABELS = ["Negative", "Neutral", "Positive"]
 
 def main():
@@ -18,75 +16,58 @@ def main():
     print("="*60)
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    
+    if not FINLLAMA_PREDS_PATH.exists():
+        print(f"Error: Could not find {FINLLAMA_PREDS_PATH.resolve()}")
+        return
 
-    # ==============================
-    # LOAD DATA
-    # ==============================
-    df_pred = pd.read_csv(PRED_PATH)
+    print("Loading FinLLaMA predictions...")
+    df = pd.read_csv(FINLLAMA_PREDS_PATH)
+    y_true = df["sentiment"]
+    y_pred = df["predicted_sentiment"]
 
-    # Load labeled shards (ground truth)
-    import glob
-    files = glob.glob(str(TRUE_PATH / "*.parquet"))
-    df_true = pd.concat([pd.read_parquet(f) for f in files[:10]])
-
-    # Align size
-    df_true = df_true.iloc[:len(df_pred)]
-
-    # ==============================
-    # PREPARE LABELS
-    # ==============================
-    y_true = df_true["sentiment"]
-    y_pred = df_pred["predicted_sentiment"]
-
-    # Convert numeric → text if needed
-    if y_true.dtype != "object":
-        id2label = {0: "Negative", 1: "Neutral", 2: "Positive"}
-        y_true = y_true.map(id2label)
-
-    if y_pred.dtype != "object":
-        id2label = {0: "Negative", 1: "Neutral", 2: "Positive"}
-        y_pred = y_pred.map(id2label)
-
-    # ==============================
-    # BINARIZATION
-    # ==============================
+    # Binarize the labels for One-vs-Rest (OvR) evaluation
     lb = LabelBinarizer()
     y_true_bin = lb.fit_transform(y_true)
     y_pred_bin = lb.transform(y_pred)
 
-    # ==============================
-    # AUC SCORE
-    # ==============================
-    macro_auc = roc_auc_score(y_true_bin, y_pred_bin, average="macro")
-    print(f"\nOverall Macro AUC Score: {macro_auc:.4f}")
+    # Calculate overall Macro AUC Score
+    macro_roc_auc_ovr = roc_auc_score(y_true_bin, y_pred_bin, multi_class="ovr", average="macro")
+    print(f"\nOverall Macro AUC Score: {macro_roc_auc_ovr:.4f}")
 
-    # ==============================
-    # PLOT ROC
-    # ==============================
+    # Set up the plot
     plt.figure(figsize=(10, 8))
     sns.set_theme(style="whitegrid")
+    
+    colors = ['#e74c3c', '#95a5a6', '#2ecc71'] # Red, Grey, Green
 
-    colors = ['#e74c3c', '#95a5a6', '#2ecc71']
-
+    # Plot an ROC curve for each of the 3 classes
     for i, color in zip(range(len(LABELS)), colors):
         fpr, tpr, _ = roc_curve(y_true_bin[:, i], y_pred_bin[:, i])
         roc_auc = auc(fpr, tpr)
-
+        
         plt.plot(fpr, tpr, color=color, lw=2,
-                 label=f"{LABELS[i]} (AUC = {roc_auc:.2f})")
+                 label=f"ROC curve of class {LABELS[i]} (AUC = {roc_auc:.2f})")
+        
+        print(f" - {LABELS[i]} AUC: {roc_auc:.4f}")
 
-    plt.plot([0, 1], [0, 1], 'k--', lw=2)
+    # Plot the random guessing baseline
+    plt.plot([0, 1], [0, 1], 'k--', lw=2, label="Random Guessing (AUC = 0.50)")
 
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title('ROC Curve - FinLLaMA')
-    plt.legend(loc="lower right")
+    # Formatting
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate', fontsize=12)
+    plt.ylabel('True Positive Rate', fontsize=12)
+    plt.title('Receiver Operating Characteristic (ROC) - FinLLaMA One-vs-Rest', pad=20, fontsize=15, fontweight='bold')
+    plt.legend(loc="lower right", fontsize=11)
 
-    # Save
-    path = OUTPUT_DIR / "roc_curve.png"
-    plt.savefig(path, dpi=300)
-    print(f"\n✅ Saved at: {path}")
-
+    # Save and display
+    plot_path = OUTPUT_DIR / "finllama_roc_curve.png"
+    plt.tight_layout()
+    plt.savefig(plot_path, dpi=300)
+    print(f"\n✅ ROC chart saved to: {plot_path.resolve()}")
+    
     plt.show()
 
 if __name__ == "__main__":
